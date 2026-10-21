@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>News x AI — XAUUSD Prediction Engine</title>
-<meta name="description" content="Prediksi arah XAUUSD berbasis berita ekonomi & data institutional, diverifikasi AI.">
 <link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;600;700&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
@@ -13,466 +12,326 @@
   var s=document.createElement('style');
   s.textContent=':root{--bg:#161821;--card:#1f2230;--card2:#262a3a;--text:#e8ecf4;--muted:#8b9ab8;--accent:#d4a24a;--accent-soft:rgba(212,162,74,.14);--accent2:#4d8b7a;--accent2-soft:rgba(77,139,122,.14);--border:rgba(139,154,184,.16);--buy:#3fb27f;--buy-soft:rgba(63,178,127,.14);--sell:#e05555;--sell-soft:rgba(224,85,85,.14);--high:#e05555;--med:#d4a24a}'+
   'html,body{margin:0;padding:0;background:var(--bg)}'+
-  '.reveal{opacity:0;transform:translateY(18px);animation:fu .55s ease forwards}.reveal:nth-child(2){animation-delay:.08s}.reveal:nth-child(3){animation-delay:.16s}.reveal:nth-child(4){animation-delay:.24s}.reveal:nth-child(5){animation-delay:.32s}@keyframes fu{to{opacity:1;transform:translateY(0)}}'+
   '.mono{font-family:"JetBrains Mono",monospace;font-variant-numeric:tabular-nums}'+
   '.serif{font-family:"Spectral",serif}'+
   '.card{background:var(--card);border:1px solid var(--border);border-radius:10px}'+
   '.glow{box-shadow:0 0 0 1px var(--accent),0 0 30px rgba(212,162,74,.18)}'+
-  '.tab-btn{padding:8px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;color:var(--muted);background:transparent;border:1px solid var(--border)}'+
-  '.tab-btn.active{color:var(--text);background:var(--accent-soft);border-color:var(--accent)}'+
   '.tbl-row{transition:background .15s ease}.tbl-row:hover{background:rgba(212,162,74,.05)}'+
   '.pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.04em}'+
-  '.rev-btn{padding:4px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);transition:all .15s}'+
-  '.rev-btn:hover{border-color:var(--accent);color:var(--text)}'+
-  '.rev-btn.picked-ok{background:var(--buy-soft);border-color:var(--buy);color:var(--buy)}'+
-  '.rev-btn.picked-no{background:var(--sell-soft);border-color:var(--sell);color:var(--sell)}'+
+  '.btn{padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);transition:all .15s}.btn:hover{border-color:var(--accent);color:var(--text)}'+
+  '.btn-primary{background:var(--accent);color:#161821;border:none;font-weight:700}.btn-primary:hover{filter:brightness(1.12)}'+
   '.grid-bg{background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:44px 44px;opacity:.35}'+
-  '.blink{animation:bl 1.4s steps(2) infinite}@keyframes bl{50%{opacity:.25}}'+
-  'input,textarea,select{background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);outline:none;transition:border-color .15s;font-family:inherit}input:focus,textarea:focus,select:focus{border-color:var(--accent)}'+
-  '.btn-primary{background:var(--accent);color:#161821;font-weight:700;border-radius:8px;cursor:pointer;transition:filter .15s;border:none}.btn-primary:hover{filter:brightness(1.12)}'+
-  '.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:8px;cursor:pointer;font-weight:600;transition:all .15s}.btn-ghost:hover{border-color:var(--accent);color:var(--text)}';
+  'input,select{background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);outline:none;font-family:inherit;box-sizing:border-box}input:focus,select:focus{border-color:var(--accent)}'+
+  '.tab-btn{padding:8px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;color:var(--muted);background:transparent;border:1px solid var(--border)}.tab-btn.active{color:var(--text);background:var(--accent-soft);border-color:var(--accent)}';
   document.head.appendChild(s);
 })();
 </script>
 </head>
 <body>
-<div style="color:var(--text);font-family:'Public Sans',sans-serif;background:radial-gradient(1000px 500px at 85% -5%,rgba(212,162,74,.10),transparent 60%),var(--bg);position:relative;overflow:hidden;min-height:100vh;">
+<div style="color:var(--text);font-family:'Public Sans',sans-serif;background:radial-gradient(1000px 500px at 85% -5%,rgba(212,162,74,.10),transparent 60%),var(--bg);position:relative;min-height:100vh;">
 <div class="grid-bg" style="position:absolute;inset:0;pointer-events:none;"></div>
 <div style="position:relative;max-width:1100px;margin:0 auto;padding:24px 20px 60px;">
 
-<!-- TOP BAR -->
-<div class="reveal" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;border:1px solid var(--border);border-radius:10px;background:rgba(22,24,33,.85);backdrop-filter:blur(6px);margin-bottom:22px;">
-  <div style="display:flex;align-items:center;gap:12px;">
-    <div style="width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#8a6420);display:flex;align-items:center;justify-content:center;">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#161821" stroke-width="2.5"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
-    </div>
-    <div>
-      <div style="font-weight:800;letter-spacing:.06em;font-size:15px;">NEWS <span style="color:var(--accent);">x</span> AI</div>
-      <div class="mono" style="font-size:10px;color:var(--muted);letter-spacing:.15em;">XAUUSD PREDICTION ENGINE</div>
-    </div>
+<!-- LOGIN / REGISTER -->
+<div id="authScreen" class="card" style="max-width:400px;margin:60px auto;padding:28px 26px;">
+  <div style="text-align:center;margin-bottom:20px;">
+    <div style="font-weight:800;letter-spacing:.06em;font-size:18px;">NEWS <span style="color:var(--accent);">x</span> AI</div>
+    <div class="mono" style="font-size:10px;color:var(--muted);letter-spacing:.15em;margin-top:2px;">XAUUSD PREDICTION ENGINE</div>
   </div>
-  <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
-    <span class="pill" style="background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent);">DEMO · DATA CONTOH</span>
-    <span class="mono" style="font-size:12px;color:var(--muted);">XAUUSD <span style="color:var(--buy);">&#9650;</span> <span style="color:var(--text);">—</span></span>
-    <span id="clock" class="mono" style="font-size:12px;color:var(--accent);">--:--:-- WIB</span>
+  <div style="display:flex;gap:8px;margin-bottom:16px;">
+    <button id="tabLogin" class="tab-btn active" style="flex:1;text-align:center;" onclick="authTab('login')">Login</button>
+    <button id="tabReg" class="tab-btn" style="flex:1;text-align:center;" onclick="authTab('register')">Daftar</button>
   </div>
+  <div style="display:flex;flex-direction:column;gap:10px;">
+    <input id="authEmail" type="email" placeholder="Email" style="width:100%;padding:10px 12px;font-size:14px;">
+    <input id="authPass" type="password" placeholder="Password (min 6 karakter)" style="width:100%;padding:10px 12px;font-size:14px;">
+    <button class="btn btn-primary" style="padding:11px;font-size:14px;margin-top:4px;" onclick="doAuth()">Masuk</button>
+    <div id="authMsg" style="font-size:12px;min-height:18px;text-align:center;"></div>
+  </div>
+  <p style="font-size:11px;color:var(--muted);text-align:center;margin:14px 0 0;line-height:1.6;">Akun Trader baru wajib disetujui Admin sebelum bisa login.<br>Super Admin: <span class="mono">baysdarma0826@gmail.com</span></p>
 </div>
 
-<!-- HERO: CURRENT SIGNAL -->
-<div class="reveal card glow" style="padding:26px 24px;margin-bottom:22px;position:relative;overflow:hidden;">
-  <div style="position:absolute;top:0;right:0;width:220px;height:220px;background:radial-gradient(circle,rgba(63,178,127,.18),transparent 70%);pointer-events:none;"></div>
-  <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:center;justify-content:space-between;position:relative;">
-    <div style="flex:1 1 320px;min-width:260px;">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-        <span class="blink" style="width:8px;height:8px;border-radius:50%;background:var(--buy);display:inline-block;"></span>
-        <span class="mono" style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);">Sinyal Aktif · Sesi New York · 21 Okt 2026</span>
+<!-- DASHBOARD (hidden sampai login) -->
+<div id="dashboard" style="display:none;">
+  <!-- TOP BAR -->
+  <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;border:1px solid var(--border);border-radius:10px;background:rgba(22,24,33,.85);margin-bottom:22px;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div style="width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#8a6420);display:flex;align-items:center;justify-content:center;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#161821" stroke-width="2.5"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
       </div>
-      <div class="serif" style="font-size:44px;font-weight:700;line-height:1.05;letter-spacing:-.01em;">
-        <span style="color:var(--buy);">BUY</span> <span style="color:var(--text);">XAUUSD</span>
-      </div>
-      <div style="margin-top:10px;color:var(--muted);font-size:14px;line-height:1.6;max-width:460px;">
-        Verifikasi AI menyimpulkan <strong style="color:var(--text);">USD Bearish</strong> menjelang rilis <strong style="color:var(--text);">Core Durable Goods Orders</strong>. Kondisi institutional (SosoValue) mendukung pelemahan DXY → emas berpotensi menguat.
-      </div>
-      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;">
-        <span class="pill mono" style="background:var(--card2);color:var(--muted);border:1px solid var(--border);">VERIFIKATOR: GEMINI 2.5 FLASH</span>
-        <span class="pill mono" style="background:var(--card2);color:var(--muted);border:1px solid var(--border);">SUMBER: SOSOVALUE + TWELVEDATA</span>
-        <span class="pill mono" style="background:var(--buy-soft);color:var(--buy);border:1px solid var(--buy);">CONFIDENCE 74%</span>
+      <div>
+        <div style="font-weight:800;letter-spacing:.06em;font-size:15px;">NEWS <span style="color:var(--accent);">x</span> AI</div>
+        <div class="mono" style="font-size:10px;color:var(--muted);letter-spacing:.15em;">XAUUSD PREDICTION ENGINE</div>
       </div>
     </div>
-    <div style="flex:0 0 auto;text-align:center;padding:22px 28px;border:1px solid var(--border);border-radius:10px;background:var(--bg);min-width:160px;">
-      <div class="mono" style="font-size:10px;letter-spacing:.18em;color:var(--muted);margin-bottom:6px;">ARAH PREDIKSI</div>
-      <div style="font-size:34px;font-weight:800;color:var(--buy);line-height:1;">BULLISH</div>
-      <div class="mono" style="font-size:11px;color:var(--muted);margin-top:8px;">GOLD / USD</div>
-      <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);" class="mono">
-        <div style="font-size:10px;color:var(--muted);">DIBUAT</div>
-        <div style="font-size:12px;color:var(--text);margin-top:2px;">21 Okt · 17:42 WIB</div>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+      <span id="userBadge" class="pill mono" style="background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent);">—</span>
+      <button class="btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <!-- VIEW TOGGLE (hanya tampil jika Admin) -->
+  <div id="viewToggle" style="display:none;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+    <span class="mono" style="font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);">Tampilan:</span>
+    <button class="tab-btn active" onclick="setView('trader',this)">Trader</button>
+    <button class="tab-btn" onclick="setView('admin',this)">Admin</button>
+  </div>
+
+  <!-- SINYAL AKTIF -->
+  <div class="card glow" style="padding:24px;margin-bottom:22px;position:relative;overflow:hidden;">
+    <div class="mono" style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Sinyal Prediksi Terbaru</div>
+    <div id="signalBox" style="font-size:13px;color:var(--muted);">Memuat sinyal terbaru…</div>
+  </div>
+
+  <!-- KALENDER BERITA (Trader) -->
+  <div class="card" data-role="trader" style="padding:20px 22px;margin-bottom:22px;">
+    <h2 style="font-size:16px;font-weight:700;margin:0 0 14px;">Kalender Berita Ekonomi · Menu News</h2>
+    <div style="overflow-x:auto;"><table class="w-full text-sm" style="min-width:600px;border-collapse:collapse;">
+      <thead><tr style="color:var(--muted);border-bottom:1px solid var(--border);" class="mono">
+        <th class="text-left pb-2.5" style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;">Event</th>
+        <th class="text-left pb-2.5" style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;">Dampak</th>
+        <th class="text-left pb-2.5" style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;">Forecast</th>
+        <th class="text-left pb-2.5" style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;">Previous</th>
+        <th class="text-left pb-2.5" style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;">Ulasan</th>
+      </tr></thead>
+      <tbody id="newsBody" class="mono" style="color:var(--text);"><tr><td colspan="5" style="padding:14px;color:var(--muted);">Memuat…</td></tr></tbody>
+    </table></div>
+  </div>
+
+  <!-- ADMIN: WINRATE + PENDING + SETTINGS -->
+  <div data-role="admin" style="display:none;">
+    <div class="card" style="padding:20px 22px;margin-bottom:22px;">
+      <h2 style="font-size:16px;font-weight:700;margin:0 0 6px;">Grafik Win Rate</h2>
+      <div id="winChart" style="height:300px;width:100%;"></div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:22px;">
+      <div class="card" style="flex:1 1 320px;padding:20px 22px;">
+        <h2 style="font-size:15px;font-weight:700;margin:0 0 12px;">Persetujuan Pengguna (Pending)</h2>
+        <div id="pendingList" style="display:flex;flex-direction:column;gap:8px;font-size:12px;color:var(--muted);">Memuat…</div>
       </div>
-    </div>
-  </div>
-  <div style="margin-top:18px;padding-top:14px;border-top:1px dashed var(--border);font-size:11px;color:var(--muted);" class="mono">
-    CATATAN PRODUK: Tidak ada level Entry / TP / SL dan tidak ada chart harga di aplikasi ini — fokus murni pada arah prediksi berbasis berita.
-  </div>
-</div>
-
-<!-- METRIC CARDS -->
-<div class="reveal" style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:22px;">
-  <div class="card" style="flex:1 1 180px;padding:16px 18px;">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
-      <span class="mono" style="font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);">Win Rate</span>
-    </div>
-    <div class="mono" style="font-size:30px;font-weight:700;color:var(--accent);">68.1%</div>
-    <div style="font-size:11px;color:var(--muted);margin-top:4px;">32 benar · 15 kalah · 47 sinyal</div>
-  </div>
-  <div class="card" style="flex:1 1 180px;padding:16px 18px;">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-      <span class="mono" style="font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);">Bulan Ini</span>
-    </div>
-    <div class="mono" style="font-size:30px;font-weight:700;color:var(--text);">12</div>
-    <div style="font-size:11px;margin-top:4px;"><span style="color:var(--buy);">8 benar</span> · <span style="color:var(--sell);">4 kalah</span> · 66.7%</div>
-  </div>
-  <div class="card" style="flex:1 1 180px;padding:16px 18px;">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-      <span class="mono" style="font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);">Event Berikutnya</span>
-    </div>
-    <div class="mono" style="font-size:20px;font-weight:700;color:var(--text);line-height:1.2;">Core Durable<br>Goods</div>
-    <div style="font-size:11px;color:var(--muted);margin-top:4px;">Hari ini · 19:30 WIB · <span style="color:var(--high);">HIGH</span></div>
-  </div>
-  <div class="card" style="flex:1 1 180px;padding:16px 18px;">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>
-      <span class="mono" style="font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);">Pending Review</span>
-    </div>
-    <div class="mono" style="font-size:30px;font-weight:700;color:var(--text);">3</div>
-    <div style="font-size:11px;color:var(--muted);margin-top:4px;">sinyal menunggu ulasan trader</div>
-  </div>
-</div>
-
-<!-- VIEW TOGGLE -->
-<div class="reveal" style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
-  <span class="mono" style="font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);">Tampilan:</span>
-  <button class="tab-btn active" data-view="trader" onclick="setView('trader',this)">Trader</button>
-  <button class="tab-btn" data-view="admin" onclick="setView('admin',this)">Admin</button>
-  <span style="font-size:11px;color:var(--muted);margin-left:6px;">(Admin: grafik win rate + persetujuan pengguna + pengaturan API)</span>
-</div>
-
-<!-- UPCOMING NEWS (Trader) -->
-<div class="reveal card" style="padding:20px 22px;margin-bottom:22px;" data-role="trader">
-  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
-    <h2 style="font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px;margin:0;">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8V6Z"/></svg>
-      Kalender Berita Ekonomi · Menu News
-    </h2>
-    <span class="mono" style="font-size:11px;color:var(--muted);">SUMBER: TWELVEDATA</span>
-  </div>
-  <div style="overflow-x:auto;">
-  <table class="w-full text-sm" style="min-width:640px;border-collapse:collapse;">
-    <thead>
-      <tr style="color:var(--muted);border-bottom:1px solid var(--border);" class="mono">
-        <th class="text-left pb-2.5 font-medium" style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;">Event</th>
-        <th class="text-left pb-2.5 font-medium" style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;">Dampak</th>
-        <th class="text-left pb-2.5 font-medium" style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;">Waktu</th>
-        <th class="text-left pb-2.5 font-medium" style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;">Forecast</th>
-        <th class="text-left pb-2.5 font-medium" style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;">Previous</th>
-        <th class="text-left pb-2.5 font-medium" style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;">Ulasan</th>
-      </tr>
-    </thead>
-    <tbody style="color:var(--text);" class="mono">
-      <tr class="tbl-row" style="border-bottom:1px solid var(--border);">
-        <td class="py-3 font-medium" style="font-family:'Public Sans',sans-serif;">Core Durable Goods Orders m/m</td>
-        <td class="py-3"><span class="pill" style="background:var(--sell-soft);color:var(--high);border:1px solid var(--high);">HIGH</span></td>
-        <td class="py-3" style="color:var(--muted);">21 Okt · 19:30</td>
-        <td class="py-3">0.5%</td>
-        <td class="py-3" style="color:var(--muted);">0.7%</td>
-        <td class="py-3"><span style="font-size:11px;color:var(--accent);">— prediksi BUY aktif —</span></td>
-      </tr>
-      <tr class="tbl-row" style="border-bottom:1px solid var(--border);">
-        <td class="py-3 font-medium" style="font-family:'Public Sans',sans-serif;">CB Consumer Confidence</td>
-        <td class="py-3"><span class="pill" style="background:var(--accent-soft);color:var(--med);border:1px solid var(--med);">MEDIUM</span></td>
-        <td class="py-3" style="color:var(--muted);">21 Okt · 21:00</td>
-        <td class="py-3">103.2</td>
-        <td class="py-3" style="color:var(--muted);">102.6</td>
-        <td class="py-3"><button class="rev-btn" onclick="pickReview(this,'ok')">Benar</button> <button class="rev-btn" onclick="pickReview(this,'no')">Kalah</button></td>
-      </tr>
-      <tr class="tbl-row" style="border-bottom:1px solid var(--border);">
-        <td class="py-3 font-medium" style="font-family:'Public Sans',sans-serif;">New Home Sales</td>
-        <td class="py-3"><span class="pill" style="background:var(--accent-soft);color:var(--med);border:1px solid var(--med);">MEDIUM</span></td>
-        <td class="py-3" style="color:var(--muted);">21 Okt · 21:00</td>
-        <td class="py-3">0.69M</td>
-        <td class="py-3" style="color:var(--muted);">0.67M</td>
-        <td class="py-3"><button class="rev-btn" onclick="pickReview(this,'ok')">Benar</button> <button class="rev-btn" onclick="pickReview(this,'no')">Kalah</button></td>
-      </tr>
-      <tr class="tbl-row">
-        <td class="py-3 font-medium" style="font-family:'Public Sans',sans-serif;">FOMC Member Williams Speaks</td>
-        <td class="py-3"><span class="pill" style="background:var(--sell-soft);color:var(--high);border:1px solid var(--high);">HIGH</span></td>
-        <td class="py-3" style="color:var(--muted);">21 Okt · 23:30</td>
-        <td class="py-3" style="color:var(--muted);">—</td>
-        <td class="py-3" style="color:var(--muted);">—</td>
-        <td class="py-3"><span style="font-size:11px;color:var(--muted);">menunggu rilis</span></td>
-      </tr>
-    </tbody>
-  </table>
-  </div>
-</div>
-
-<!-- ADMIN-ONLY: WIN RATE CHART + APPROVAL -->
-<div data-role="admin" style="display:none;">
-  <div class="reveal card" style="padding:20px 22px;margin-bottom:22px;">
-    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:6px;">
-      <h2 style="font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px;margin:0;">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
-        Grafik Win Rate · Berdasarkan Ulasan Pengguna
-      </h2>
-      <span class="mono" style="font-size:11px;color:var(--muted);">FILTER: 6 BULAN TERAKHIR</span>
-    </div>
-    <div id="winChart" style="height:320px;width:100%;margin-top:8px;"></div>
-  </div>
-
-  <div style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:22px;">
-    <div class="card" style="flex:1 1 340px;padding:20px 22px;">
-      <h2 style="font-size:15px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;margin-top:0;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
-        Persetujuan Pengguna (Pending)
-      </h2>
-      <div id="pendingList" style="display:flex;flex-direction:column;gap:10px;">
-        <div class="pending-row" style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);">
-          <div class="mono" style="font-size:12px;"><div style="color:var(--text);">trader.andi@gmail.com</div><div style="color:var(--muted);font-size:10px;margin-top:2px;">20 Okt 2026</div></div>
-          <div style="display:flex;gap:6px;"><button class="rev-btn" onclick="approveUser(this,true)" style="color:var(--buy);border-color:var(--buy);">Approve</button><button class="rev-btn" onclick="approveUser(this,false)" style="color:var(--sell);border-color:var(--sell);">Reject</button></div>
-        </div>
-        <div class="pending-row" style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);">
-          <div class="mono" style="font-size:12px;"><div style="color:var(--text);">sarah.trade@yahoo.com</div><div style="color:var(--muted);font-size:10px;margin-top:2px;">20 Okt 2026</div></div>
-          <div style="display:flex;gap:6px;"><button class="rev-btn" onclick="approveUser(this,true)" style="color:var(--buy);border-color:var(--buy);">Approve</button><button class="rev-btn" onclick="approveUser(this,false)" style="color:var(--sell);border-color:var(--sell);">Reject</button></div>
-        </div>
-        <div class="pending-row" style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);">
-          <div class="mono" style="font-size:12px;"><div style="color:var(--text);">riski.fx@gmail.com</div><div style="color:var(--muted);font-size:10px;margin-top:2px;">19 Okt 2026</div></div>
-          <div style="display:flex;gap:6px;"><button class="rev-btn" onclick="approveUser(this,true)" style="color:var(--buy);border-color:var(--buy);">Approve</button><button class="rev-btn" onclick="approveUser(this,false)" style="color:var(--sell);border-color:var(--sell);">Reject</button></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card" style="flex:1 1 340px;padding:20px 22px;">
-      <h2 style="font-size:15px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;margin-top:0;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-        Pengaturan API Key & Model AI
-      </h2>
-      <div style="display:flex;flex-direction:column;gap:10px;" class="mono">
-        <div><label style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);">SosoValue API Key</label><input type="password" placeholder="•••••••••••• (tersimpan di Script Properties)" style="width:100%;padding:8px 10px;font-size:12px;margin-top:4px;box-sizing:border-box;"></div>
-        <div><label style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);">TwelveData API Key</label><input type="password" placeholder="•••••••••••• (tersimpan di Script Properties)" style="width:100%;padding:8px 10px;font-size:12px;margin-top:4px;box-sizing:border-box;"></div>
-        <div><label style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);">Model AI Verifikator</label>
-          <select style="width:100%;padding:8px 10px;font-size:12px;margin-top:4px;box-sizing:border-box;">
-            <option>Gemini 2.5 Flash</option><option>DeepSeek V3</option><option>Gemini 2.5 Pro</option>
-          </select>
-        </div>
-        <button class="btn-primary" style="padding:9px;font-size:12px;margin-top:4px;" onclick="alertDemo('Pengaturan API tersimpan (demo). Pada produksi, key disimpan di PropertiesService — tidak pernah di-hardcode.')">Simpan Pengaturan</button>
+      <div class="card" style="flex:1 1 320px;padding:20px 22px;">
+        <h2 style="font-size:15px;font-weight:700;margin:0 0 12px;">Model AI Verifikator</h2>
+        <select id="modelAi" style="width:100%;padding:9px;font-size:13px;">
+          <option>gemini-2.5-flash</option><option>gemini-2.5-pro</option><option>deepseek-chat (via proxy)</option>
+        </select>
+        <button class="btn btn-primary" style="width:100%;padding:9px;margin-top:10px;font-size:13px;" onclick="saveModel()">Simpan Model</button>
+        <p style="font-size:10px;color:var(--muted);margin-top:10px;line-height:1.5;">API key (TwelveData, SosoValue, Gemini) disimpan di Environment Variables Vercel — tidak pernah terekspos ke browser.</p>
       </div>
     </div>
   </div>
-</div>
 
-<!-- SIGNAL HISTORY -->
-<div class="reveal card" style="padding:20px 22px;margin-bottom:22px;">
-  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
-    <h2 style="font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px;margin:0;">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
-      Riwayat Signal
-    </h2>
-    <span class="mono" style="font-size:11px;color:var(--muted);">TANPA ENTRY / TP / SL</span>
+  <!-- RIWAYAT SIGNAL -->
+  <div class="card" style="padding:20px 22px;margin-bottom:22px;">
+    <h2 style="font-size:16px;font-weight:700;margin:0 0 14px;">Riwayat Signal <span class="mono" style="font-size:10px;color:var(--muted);">· TANPA ENTRY/TP/SL</span></h2>
+    <div style="overflow-x:auto;"><table class="w-full text-sm" style="min-width:640px;border-collapse:collapse;">
+      <thead><tr style="color:var(--muted);border-bottom:1px solid var(--border);" class="mono">
+        <th class="text-left pb-2.5" style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;">Tanggal</th>
+        <th class="text-left pb-2.5" style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;">Event</th>
+        <th class="text-left pb-2.5" style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;">Arah USD</th>
+        <th class="text-left pb-2.5" style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;">Rekomendasi</th>
+        <th class="text-left pb-2.5" style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;">Model AI</th>
+        <th class="text-left pb-2.5" style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;">Status</th>
+      </tr></thead>
+      <tbody id="sigBody" class="mono" style="color:var(--text);"><tr><td colspan="6" style="padding:14px;color:var(--muted);">Memuat…</td></tr></tbody>
+    </table></div>
   </div>
-  <div style="overflow-x:auto;">
-  <table class="w-full text-sm" style="min-width:680px;border-collapse:collapse;">
-    <thead>
-      <tr style="color:var(--muted);border-bottom:1px solid var(--border);" class="mono">
-        <th class="text-left pb-2.5 font-medium" style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;">Tanggal</th>
-        <th class="text-left pb-2.5 font-medium" style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;">Event Terkait</th>
-        <th class="text-left pb-2.5 font-medium" style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;">Arah USD</th>
-        <th class="text-left pb-2.5 font-medium" style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;">Rekomendasi</th>
-        <th class="text-left pb-2.5 font-medium" style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;">Model AI</th>
-        <th class="text-left pb-2.5 font-medium" style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;">Status</th>
-      </tr>
-    </thead>
-    <tbody style="color:var(--text);" class="mono">
-      <tr class="tbl-row" style="border-bottom:1px solid var(--border);">
-        <td class="py-3" style="color:var(--muted);">20 Okt</td>
-        <td class="py-3 font-medium" style="font-family:'Public Sans',sans-serif;">Existing Home Sales</td>
-        <td class="py-3" style="color:var(--sell);">Bullish</td>
-        <td class="py-3" style="color:var(--sell);font-weight:700;">SELL</td>
-        <td class="py-3" style="font-size:11px;color:var(--muted);">Gemini 2.5 Flash</td>
-        <td class="py-3"><span class="pill" style="background:var(--buy-soft);color:var(--buy);border:1px solid var(--buy);">BENAR</span></td>
-      </tr>
-      <tr class="tbl-row" style="border-bottom:1px solid var(--border);">
-        <td class="py-3" style="color:var(--muted);">19 Okt</td>
-        <td class="py-3 font-medium" style="font-family:'Public Sans',sans-serif;">Unemployment Claims</td>
-        <td class="py-3" style="color:var(--buy);">Bearish</td>
-        <td class="py-3" style="color:var(--buy);font-weight:700;">BUY</td>
-        <td class="py-3" style="font-size:11px;color:var(--muted);">DeepSeek V3</td>
-        <td class="py-3"><span class="pill" style="background:var(--sell-soft);color:var(--sell);border:1px solid var(--sell);">KALAH</span></td>
-      </tr>
-      <tr class="tbl-row" style="border-bottom:1px solid var(--border);">
-        <td class="py-3" style="color:var(--muted);">18 Okt</td>
-        <td class="py-3 font-medium" style="font-family:'Public Sans',sans-serif;">Building Permits</td>
-        <td class="py-3" style="color:var(--buy);">Bearish</td>
-        <td class="py-3" style="color:var(--buy);font-weight:700;">BUY</td>
-        <td class="py-3" style="font-size:11px;color:var(--muted);">Gemini 2.5 Flash</td>
-        <td class="py-3"><span class="pill" style="background:var(--buy-soft);color:var(--buy);border:1px solid var(--buy);">BENAR</span></td>
-      </tr>
-      <tr class="tbl-row" style="border-bottom:1px solid var(--border);">
-        <td class="py-3" style="color:var(--muted);">17 Okt</td>
-        <td class="py-3 font-medium" style="font-family:'Public Sans',sans-serif;">Retail Sales m/m</td>
-        <td class="py-3" style="color:var(--sell);">Bullish</td>
-        <td class="py-3" style="color:var(--sell);font-weight:700;">SELL</td>
-        <td class="py-3" style="font-size:11px;color:var(--muted);">Gemini 2.5 Flash</td>
-        <td class="py-3"><span class="pill" style="background:var(--buy-soft);color:var(--buy);border:1px solid var(--buy);">BENAR</span></td>
-      </tr>
-      <tr class="tbl-row" style="border-bottom:1px solid var(--border);">
-        <td class="py-3" style="color:var(--muted);">16 Okt</td>
-        <td class="py-3 font-medium" style="font-family:'Public Sans',sans-serif;">CPI y/y</td>
-        <td class="py-3" style="color:var(--sell);">Bullish</td>
-        <td class="py-3" style="color:var(--sell);font-weight:700;">SELL</td>
-        <td class="py-3" style="font-size:11px;color:var(--muted);">DeepSeek V3</td>
-        <td class="py-3"><span class="pill" style="background:var(--card2);color:var(--muted);border:1px solid var(--border);">MENUNGGU</span></td>
-      </tr>
-      <tr class="tbl-row">
-        <td class="py-3" style="color:var(--muted);">15 Okt</td>
-        <td class="py-3 font-medium" style="font-family:'Public Sans',sans-serif;">PPI m/m</td>
-        <td class="py-3" style="color:var(--buy);">Bearish</td>
-        <td class="py-3" style="color:var(--buy);font-weight:700;">BUY</td>
-        <td class="py-3" style="font-size:11px;color:var(--muted);">Gemini 2.5 Flash</td>
-        <td class="py-3"><span class="pill" style="background:var(--buy-soft);color:var(--buy);border:1px solid var(--buy);">BENAR</span></td>
-      </tr>
-    </tbody>
-  </table>
-  </div>
-</div>
 
-<!-- INTEGRATIONS + RBAC -->
-<div class="reveal" style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:22px;">
-  <div class="card" style="flex:1 1 300px;padding:20px 22px;">
-    <h2 style="font-size:15px;font-weight:700;margin-bottom:14px;margin-top:0;letter-spacing:.08em;" class="mono">SUMBER DATA &amp; INTEGRASI</h2>
-    <div style="display:flex;flex-direction:column;gap:9px;" class="mono" style="font-size:12px;">
-      <div style="display:flex;justify-content:space-between;padding:8px 10px;background:var(--bg);border-radius:6px;border:1px solid var(--border);font-size:12px;"><span>SosoValue API</span><span style="color:var(--buy);">● AKTIF</span></div>
-      <div style="display:flex;justify-content:space-between;padding:8px 10px;background:var(--bg);border-radius:6px;border:1px solid var(--border);font-size:12px;"><span>TwelveData API</span><span style="color:var(--buy);">● AKTIF</span></div>
-      <div style="display:flex;justify-content:space-between;padding:8px 10px;background:var(--bg);border-radius:6px;border:1px solid var(--border);font-size:12px;"><span>Google Finance</span><span style="color:var(--buy);">● AKTIF</span></div>
-      <div style="display:flex;justify-content:space-between;padding:8px 10px;background:var(--bg);border-radius:6px;border:1px solid var(--border);font-size:12px;"><span>Gemini 2.5 Flash (verifikator)</span><span style="color:var(--buy);">● AKTIF</span></div>
-      <div style="display:flex;justify-content:space-between;padding:8px 10px;background:var(--bg);border-radius:6px;border:1px solid var(--border);font-size:12px;"><span>Gmail (notifikasi)</span><span style="color:var(--muted);">● STANDBY</span></div>
+  <!-- FORM SARAN -->
+  <div class="card" data-role="trader" style="padding:20px 22px;margin-bottom:22px;">
+    <h2 style="font-size:15px;font-weight:700;margin:0 0 12px;">Form Saran untuk Admin</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;">
+      <input id="saranText" type="text" placeholder="Tulis masukan untuk pengembangan aplikasi..." style="flex:1 1 300px;padding:9px 11px;font-size:13px;">
+      <button class="btn btn-primary" style="padding:9px 20px;font-size:13px;" onclick="kirimSaran()">Kirim</button>
     </div>
+    <div id="saranStatus" style="margin-top:10px;font-size:12px;color:var(--buy);display:none;"></div>
   </div>
-  <div class="card" style="flex:1 1 300px;padding:20px 22px;">
-    <h2 style="font-size:15px;font-weight:700;margin-bottom:14px;margin-top:0;letter-spacing:.08em;" class="mono">HAK AKSES (RBAC)</h2>
-    <div style="display:flex;flex-direction:column;gap:9px;font-size:12px;">
-      <div style="padding:10px 12px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 6px 6px 0;">
-        <strong style="color:var(--accent);">Super Admin</strong> <span class="mono" style="font-size:10px;color:var(--muted);">baysdarma0826@gmail.com</span><br>
-        <span style="color:var(--muted);font-size:11px;">Semua fitur + Manajemen Admin (eksklusif)</span>
-      </div>
-      <div style="padding:10px 12px;border-left:3px solid var(--accent2);background:var(--accent2-soft);border-radius:0 6px 6px 0;">
-        <strong style="color:var(--accent2);">Admin Biasa</strong><br>
-        <span style="color:var(--muted);font-size:11px;">API Key · Persetujuan User · Grafik Win Rate</span>
-      </div>
-      <div style="padding:10px 12px;border-left:3px solid var(--muted);background:rgba(139,154,184,.08);border-radius:0 6px 6px 0;">
-        <strong style="color:var(--text);">Trader</strong> <span class="mono" style="font-size:10px;color:var(--muted);">(wajib approval)</span><br>
-        <span style="color:var(--muted);font-size:11px;">Menu News · Riwayat Signal · Form Saran</span>
-      </div>
-    </div>
+
+  <div style="padding-top:18px;border-top:1px solid var(--border);text-align:center;">
+    <p style="font-size:11px;color:var(--muted);line-height:1.6;max-width:640px;margin:0 auto;">Bukan saran investasi. Prediksi dihasilkan AI dari data ekonomi & institutional, tanpa jaminan akurasi. Backend: Vercel Serverless Functions + Supabase Postgres + Vercel Cron.</p>
   </div>
 </div>
-
-<!-- FORM SARAN -->
-<div class="reveal card" style="padding:20px 22px;margin-bottom:22px;" data-role="trader">
-  <h2 style="font-size:15px;font-weight:700;margin-bottom:12px;margin-top:0;display:flex;align-items:center;gap:8px;">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-    Form Saran untuk Admin
-  </h2>
-  <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;">
-    <div style="flex:1 1 220px;"><label class="mono" style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);">Email</label><input id="saranEmail" type="email" placeholder="trader@email.com" style="width:100%;padding:9px 11px;font-size:13px;margin-top:4px;box-sizing:border-box;"></div>
-    <div style="flex:2 1 320px;"><label class="mono" style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);">Saran / Masukan</label><input id="saranText" type="text" placeholder="Tulis masukan untuk pengembangan aplikasi..." style="width:100%;padding:9px 11px;font-size:13px;margin-top:4px;box-sizing:border-box;"></div>
-    <button class="btn-primary" style="padding:9px 22px;font-size:13px;" onclick="kirimSaran()">Kirim</button>
-  </div>
-  <div id="saranStatus" style="margin-top:10px;font-size:12px;color:var(--buy);display:none;">✓ Saran terkirim (demo) — pada produksi tersimpan ke sheet Form_Saran.</div>
-</div>
-
-<!-- FOOTER -->
-<div style="padding-top:18px;border-top:1px solid var(--border);text-align:center;">
-  <div class="mono" style="font-size:10px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;margin-bottom:6px;">News x AI · XAUUSD Prediction Engine · v1.1</div>
-  <p style="font-size:11px;color:var(--muted);line-height:1.6;max-width:640px;margin:0 auto;">Tampilan mockup produk berdasarkan PRD. Seluruh angka &amp; event adalah data contoh untuk demonstrasi. Bukan saran investasi. Pada produksi dijalankan di Google Apps Script dengan Google Sheets sebagai database.</p>
-</div>
-
 </div>
 </div>
 
 <script>
-// Live clock WIB
-(function tick(){
-  try{
-    var el=document.getElementById('clock'); if(!el)return;
-    function upd(){
-      var d=new Date();
-      var utc=d.getTime()+d.getTimezoneOffset()*60000;
-      var wib=new Date(utc+7*3600000);
-      var p=function(n){return (n<10?'0':'')+n};
-      el.textContent=p(wib.getHours())+':'+p(wib.getMinutes())+':'+p(wib.getSeconds())+' WIB';
+var TOKEN = localStorage.getItem('nx_token') || '';
+var USER = null;
+
+function api(path, opts){
+  opts = opts||{};
+  var h = {'Content-Type':'application/json'};
+  if(TOKEN) h['Authorization']='Bearer '+TOKEN;
+  return fetch('/api/'+path, Object.assign({headers:h}, opts)).then(function(r){return r.json().then(function(j){return {status:r.status, body:j};});});
+}
+
+function authTab(t){
+  document.getElementById('tabLogin').classList.toggle('active', t==='login');
+  document.getElementById('tabReg').classList.toggle('active', t==='register');
+  document.querySelector('#authScreen .btn-primary').textContent = t==='login'?'Masuk':'Daftar';
+  document.getElementById('authMsg').textContent=''; document.getElementById('authMsg').style.color='var(--muted)';
+}
+
+function doAuth(){
+  var isReg = document.getElementById('tabReg').classList.contains('active');
+  var email=document.getElementById('authEmail').value.trim();
+  var pass=document.getElementById('authPass').value;
+  var msg=document.getElementById('authMsg');
+  msg.style.color='var(--muted)'; msg.textContent='Memproses…';
+  api('auth?action='+(isReg?'register':'login'), {method:'POST', body:JSON.stringify({email:email,password:pass})}).then(function(r){
+    if(r.body.ok && r.body.token){
+      TOKEN=r.body.token; USER=r.body.user; localStorage.setItem('nx_token',TOKEN);
+      enterApp();
+    } else if(r.body.ok){
+      msg.style.color='var(--buy)'; msg.textContent=r.body.message||'Berhasil. Silakan login.';
+    } else {
+      msg.style.color='var(--sell)'; msg.textContent=r.body.error||'Gagal.';
     }
-    upd(); setInterval(upd,1000);
-  }catch(e){}
-})();
+  }).catch(function(){msg.style.color='var(--sell)';msg.textContent='Koneksi error.';});
+}
 
-// ECharts win rate (retry guard)
-(function init(n){
-  try{
-    var el=document.getElementById('winChart'); if(!el)return;
-    if(typeof echarts==='undefined'){if(n<40){setTimeout(function(){init(n+1)},250);return;} el.textContent='Gagal memuat chart library.';return;}
-    var c=echarts.init(el);
-    var st=getComputedStyle(document.documentElement);
-    var buy=st.getPropertyValue('--buy').trim()||'#3fb27f';
-    var sell=st.getPropertyValue('--sell').trim()||'#e05555';
-    var muted=st.getPropertyValue('--muted').trim()||'#8b9ab8';
-    var card=st.getPropertyValue('--card').trim()||'#1f2230';
-    var text=st.getPropertyValue('--text').trim()||'#e8ecf4';
-    var border=st.getPropertyValue('--border').trim()||'rgba(139,154,184,.16)';
-    var months=['Mei','Jun','Jul','Agu','Sep','Okt'];
-    var benar=[6,7,5,8,4,8];
-    var kalah=[3,4,2,3,3,4];
-    c.setOption({
-      backgroundColor:'transparent',
-      tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:card,borderColor:border,textStyle:{color:text}},
-      legend:{data:['Benar','Kalah'],textStyle:{color:muted,fontSize:11},top:0,right:0},
-      grid:{left:'3%',right:'4%',top:40,bottom:'3%',containLabel:true},
-      xAxis:{type:'category',data:months,axisLabel:{color:muted,fontSize:11},axisTick:{show:false},axisLine:{lineStyle:{color:border}}},
-      yAxis:{type:'value',axisLabel:{color:muted,fontSize:11},splitLine:{lineStyle:{color:border,type:'dashed'}}},
-      series:[
-        {name:'Benar',type:'bar',stack:'s',data:benar,itemStyle:{color:buy},barWidth:34},
-        {name:'Kalah',type:'bar',stack:'s',data:kalah,itemStyle:{borderRadius:[6,6,0,0],color:sell}}
-      ]
-    });
-    window.addEventListener('resize',function(){c.resize()});
-    window.__winChart=c;
-  }catch(e){console.error(e)}
-})(0);
+function logout(){ localStorage.removeItem('nx_token'); TOKEN=''; USER=null; location.reload(); }
 
-// View toggle Trader / Admin
+function enterApp(){
+  document.getElementById('authScreen').style.display='none';
+  document.getElementById('dashboard').style.display='block';
+  document.getElementById('userBadge').textContent = (USER?USER.email:'')+' · '+(USER?USER.role:'');
+  var isAdmin = USER && (USER.role==='Super Admin'||USER.role==='Admin Biasa');
+  document.getElementById('viewToggle').style.display = isAdmin?'flex':'none';
+  loadAll();
+}
+
 function setView(v,btn){
-  try{
-    document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active')});
-    btn.classList.add('active');
-    document.querySelectorAll('[data-role]').forEach(function(el){
-      el.style.display = (el.getAttribute('data-role')===v)?'':'none';
-    });
-    setTimeout(function(){if(window.__winChart)window.__winChart.resize()},100);
-  }catch(e){}
+  document.querySelectorAll('#viewToggle .tab-btn').forEach(function(b){b.classList.remove('active')});
+  btn.classList.add('active');
+  document.querySelectorAll('[data-role]').forEach(function(el){ el.style.display = (el.getAttribute('data-role')===v)?'':'none'; });
+  setTimeout(function(){if(window.__winChart)window.__winChart.resize();},100);
 }
 
-// Review buttons (Benar/Kalah) on news rows
-function pickReview(btn,kind){
-  try{
-    var wrap=btn.parentElement;
-    wrap.querySelectorAll('.rev-btn').forEach(function(b){b.classList.remove('picked-ok','picked-no')});
-    btn.classList.add(kind==='ok'?'picked-ok':'picked-no');
-  }catch(e){}
+function loadAll(){ loadSignal(); loadNews(); loadSignals(); if(USER&&(USER.role==='Super Admin'||USER.role==='Admin Biasa')){loadWinrate();loadPending();loadModel();} }
+
+function loadSignal(){
+  api('signals').then(function(r){
+    var box=document.getElementById('signalBox');
+    var s=(r.body.signals||[])[0];
+    if(!s){box.innerHTML='<span style="color:var(--muted);">Belum ada prediksi. Prediksi dijalankan otomatis oleh cron menjelang sesi New York.</span>';return;}
+    var buy = (s.rekomendasi||'').toLowerCase().indexOf('buy')>-1;
+    var col = buy?'var(--buy)':'var(--sell)';
+    box.innerHTML = '<div style="display:flex;flex-wrap:wrap;gap:24px;align-items:center;justify-content:space-between;">'+
+      '<div style="flex:1 1 300px;min-width:240px;">'+
+        '<div class="serif" style="font-size:40px;font-weight:700;line-height:1.05;color:'+col+';">'+(s.rekomendasi||'—').toUpperCase()+' <span style="color:var(--text);">XAUUSD</span></div>'+
+        '<div style="margin-top:8px;color:var(--muted);font-size:13px;line-height:1.6;">'+(s.alasan||'Arah USD: '+(s.arah||'—'))+'</div>'+
+        '<div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;">'+
+          '<span class="pill mono" style="background:var(--card2);color:var(--muted);border:1px solid var(--border);">VERIFIKATOR: '+(s.model_ai||'—').toUpperCase()+'</span>'+
+          '<span class="pill mono" style="background:'+(buy?'var(--buy-soft)':'var(--sell-soft)')+';color:'+col+';border:1px solid '+col+';">CONFIDENCE '+(s.confidence||0)+'%</span>'+
+        '</div>'+
+      '</div>'+
+      '<div style="text-align:center;padding:18px 24px;border:1px solid var(--border);border-radius:10px;background:var(--bg);min-width:140px;">'+
+        '<div class="mono" style="font-size:10px;letter-spacing:.18em;color:var(--muted);">STATUS</div>'+
+        '<div style="font-size:18px;font-weight:700;margin-top:4px;color:'+(s.status==='Benar'?'var(--buy)':s.status==='Kalah'?'var(--sell)':'var(--accent)')+';">'+(s.status||'Menunggu')+'</div>'+
+        '<div class="mono" style="font-size:10px;color:var(--muted);margin-top:8px;">'+(s.created_at||'').slice(0,16).replace('T',' ')+'</div>'+
+      '</div></div>';
+  });
 }
 
-// Approve / Reject pending user
-function approveUser(btn,ok){
-  try{
-    var row=btn.closest('.pending-row');
-    if(row){row.style.opacity='.4';row.style.pointerEvents='none';}
-    alertDemo(ok?'Akun disetujui (demo) — user dapat login.':'Akun ditolak (demo).');
-  }catch(e){}
+function loadNews(){
+  api('news').then(function(r){
+    var tb=document.getElementById('newsBody');
+    var list=r.body.news||[];
+    if(!list.length){tb.innerHTML='<tr><td colspan="5" style="padding:14px;color:var(--muted);">Belum ada data berita. Cron akan mengisi otomatis.</td></tr>';return;}
+    tb.innerHTML=list.map(function(n,i){
+      var d=String(n.dampak||'Medium').toLowerCase();
+      var hi=d.indexOf('high')>-1;
+      var pill='<span class="pill" style="background:'+(hi?'var(--sell-soft)':'var(--accent-soft)')+';color:'+(hi?'var(--high)':'var(--med)')+';border:1px solid '+(hi?'var(--high)':'var(--med)')+';">'+(n.dampak||'Medium').toUpperCase()+'</span>';
+      return '<tr class="tbl-row" style="border-bottom:1px solid var(--border);"><td class="py-3" style="font-family:\'Public Sans\',sans-serif;font-weight:600;">'+(n.event||'—')+'</td><td class="py-3">'+pill+'</td><td class="py-3">'+(n.forecast??'—')+'</td><td class="py-3" style="color:var(--muted);">'+(n.previous??'—')+'</td><td class="py-3"><button class="btn" onclick="review('+(i+1)+',\'Benar\',this)" style="padding:3px 10px;font-size:11px;">Benar</button> <button class="btn" onclick="review('+(i+1)+',\'Kalah\',this)" style="padding:3px 10px;font-size:11px;">Kalah</button></td></tr>';
+    }).join('');
+  });
 }
 
-// Form saran
+function review(id,val,btn){
+  api('signals',{method:'POST',body:JSON.stringify({action:'review',prediksi_id:id,penilaian:val})}).then(function(r){
+    btn.textContent = r.body.ok?'✓ '+val:'Gagal';
+    btn.style.borderColor = r.body.ok?'var(--buy)':'var(--sell)';
+    loadSignals();
+  });
+}
+
+function loadSignals(){
+  api('signals').then(function(r){
+    var tb=document.getElementById('sigBody');
+    var list=r.body.signals||[];
+    if(!list.length){tb.innerHTML='<tr><td colspan="6" style="padding:14px;color:var(--muted);">Belum ada riwayat.</td></tr>';return;}
+    tb.innerHTML=list.map(function(s){
+      var buy=(s.rekomendasi||'').toLowerCase().indexOf('buy')>-1;
+      var col=buy?'var(--buy)':'var(--sell)';
+      var st=s.status||'Menunggu';
+      var stCol=st==='Benar'?'var(--buy)':st==='Kalah'?'var(--sell)':'var(--muted)';
+      return '<tr class="tbl-row" style="border-bottom:1px solid var(--border);"><td class="py-3" style="color:var(--muted);">'+(s.created_at||'').slice(0,10)+'</td><td class="py-3" style="font-family:\'Public Sans\',sans-serif;font-weight:600;">'+(s.event_terkait||'—')+'</td><td class="py-3" style="color:'+col+';">'+(s.arah||'—')+'</td><td class="py-3" style="color:'+col+';font-weight:700;">'+(s.rekomendasi||'—').toUpperCase()+'</td><td class="py-3" style="font-size:11px;color:var(--muted);">'+(s.model_ai||'—')+'</td><td class="py-3"><span class="pill" style="background:var(--card2);color:'+stCol+';border:1px solid var(--border);">'+st.toUpperCase()+'</span></td></tr>';
+    }).join('');
+  });
+}
+
+function loadWinrate(){
+  api('admin?action=winrate').then(function(r){
+    var el=document.getElementById('winChart'); if(!el)return;
+    var b=r.body;
+    (function init(n){
+      if(typeof echarts==='undefined'){if(n<40){setTimeout(function(){init(n+1)},250);return;}el.textContent='Chart gagal dimuat.';return;}
+      var c=echarts.init(el); window.__winChart=c;
+      var benar=b.benar||0, kalah=b.kalah||0;
+      c.setOption({
+        backgroundColor:'transparent',
+        tooltip:{trigger:'item'},
+        legend:{bottom:0,textStyle:{color:'#8b9ab8',fontSize:11}},
+        series:[{type:'pie',radius:['45%','70%'],label:{color:'#e8ecf4',fontSize:12,formatter:'{b}: {c} ({d}%)'},
+          data:[{value:benar,name:'Benar',itemStyle:{color:'#3fb27f'}},{value:kalah,name:'Kalah',itemStyle:{color:'#e05555'}}]}]
+      });
+      window.addEventListener('resize',function(){c.resize()});
+    })(0);
+  });
+}
+
+function loadPending(){
+  api('admin?action=pending').then(function(r){
+    var el=document.getElementById('pendingList');
+    var list=r.body.pending||[];
+    if(!list.length){el.innerHTML='<span style="color:var(--muted);">Tidak ada akun pending.</span>';return;}
+    el.innerHTML=list.map(function(u){
+      return '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 11px;border:1px solid var(--border);border-radius:8px;background:var(--bg);"><span class="mono" style="font-size:12px;color:var(--text);">'+u.email+'</span><span><button class="btn" onclick="approve(\''+u.email+'\',true,this)" style="padding:3px 10px;font-size:11px;color:var(--buy);border-color:var(--buy);">Approve</button> <button class="btn" onclick="approve(\''+u.email+'\',false,this)" style="padding:3px 10px;font-size:11px;color:var(--sell);border-color:var(--sell);">Reject</button></span></div>';
+    }).join('');
+  });
+}
+
+function approve(email,ok,btn){
+  api('admin?action=approve',{method:'POST',body:JSON.stringify({email:email,approve:ok})}).then(function(){
+    btn.closest('div').parentNode.style.opacity='.4';
+    loadPending();
+  });
+}
+
+function loadModel(){ api('admin?action=settings').then(function(r){ if(r.body.model_ai)document.getElementById('modelAi').value=r.body.model_ai; }); }
+function saveModel(){
+  var m=document.getElementById('modelAi').value;
+  api('admin?action=settings',{method:'POST',body:JSON.stringify({model_ai:m})}).then(function(r){ alert(r.body.ok?'Model AI disimpan: '+m:(r.body.error||'Gagal')); });
+}
+
 function kirimSaran(){
-  try{
-    var e=document.getElementById('saranEmail').value.trim();
-    var t=document.getElementById('saranText').value.trim();
-    var s=document.getElementById('saranStatus');
-    if(!e||!t){s.style.display='block';s.style.color='var(--sell)';s.textContent='✗ Email dan saran wajib diisi.';return;}
-    s.style.display='block';s.style.color='var(--buy)';
-    s.textContent='✓ Saran dari '+e+' terkirim (demo) — pada produksi tersimpan ke sheet Form_Saran.';
-    document.getElementById('saranEmail').value='';document.getElementById('saranText').value='';
-  }catch(e){}
+  var t=document.getElementById('saranText').value.trim();
+  var s=document.getElementById('saranStatus');
+  if(!t){s.style.display='block';s.style.color='var(--sell)';s.textContent='Saran tidak boleh kosong.';return;}
+  api('saran',{method:'POST',body:JSON.stringify({isi:t})}).then(function(r){
+    s.style.display='block';s.style.color=r.body.ok?'var(--buy)':'var(--sell)';
+    s.textContent=r.body.ok?'✓ '+r.body.message:(r.body.error||'Gagal.');
+    if(r.body.ok)document.getElementById('saranText').value='';
+  });
 }
 
-function alertDemo(msg){alert(msg);}
+// auto-login jika token tersimpan
+if(TOKEN){
+  api('auth?action=me').then(function(r){
+    if(r.body.user){USER=r.body.user;enterApp();}
+    else{localStorage.removeItem('nx_token');TOKEN='';}
+  }).catch(function(){});
+}
 </script>
 </body>
 </html>

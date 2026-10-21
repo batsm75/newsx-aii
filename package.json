@@ -1,0 +1,6 @@
+{
+  "name": "newsx-ai-xauusd",
+  "version": "1.0.0",
+  "description": "News x AI — XAUUSD Prediction Engine (Vercel Serverless + Supabase)",
+  "private": true
+}
